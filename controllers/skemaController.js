@@ -1,10 +1,10 @@
-const { Skema, JenisSkema, ModeSkema, Unit, Elemen } = require('../models');
+const { Skema, JenisSkema, ModeSkema, Unit, Elemen, KUK, KelPekerjaan } = require('../models');
 
 // Mengambil semua skema
 exports.getSkema = async (req, res) => {
   try {
     const skemas = await Skema.findAll({
-     include: [
+    include: [
   {
     model: JenisSkema,
     as: 'jenis_skema1',
@@ -16,18 +16,40 @@ exports.getSkema = async (req, res) => {
     attributes: ['id', 'mode_skema'],
   },
   {
-    model: Unit, // Relasi dengan Unit
+    model: KelPekerjaan,
+    as: 'kel_pekerjaan',
+    attributes: ['id', 'kelompok_pekerjaan'],
+    include: [
+      {
+        model: Unit,
+        as: 'units',
+        attributes: ['id', 'kode_unit', 'judul_unit_id'],
+      }
+    ]
+  },
+  {
+    model: Unit,
     as: 'units',
     attributes: ['id', 'kode_unit', 'judul_unit_id'],
     include: [
       {
-        model: Elemen, // Nested include untuk relasi Unit ke Elemen
-        as: 'elemen', // Pastikan 'as' sesuai dengan alias yang digunakan di asosiasi model Unit
-        attributes: ['id', 'nama_elemen'], // Pilih atribut yang ingin ditampilkan dari Elemen
+        model: Elemen,
+        as: 'elemen', // Pastikan ini sesuai dengan alias di model Unit
+        attributes: ['id', 'nama_elemen'],
+        include: [
+          {
+            model: KUK,
+            as: 'kuks', // Pastikan ini sesuai dengan alias di model Elemen
+            attributes: ['id', 'namaKriteria'],
+          },
+        ],
       },
     ],
   },
 ],
+
+
+
 
     });
 

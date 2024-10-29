@@ -34,16 +34,16 @@ module.exports = {
       {
         id: v4(),  
         namaKriteria: 'Kriteria 1',
-        elemenId: elemenId, // Sertakan elemenId
-        unitId: unitId,     // Sertakan unitId
+        elemen_id: elemenId, // Sertakan elemenId
+        unit_id: unitId,     // Sertakan unitId
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: v4(),  
         namaKriteria: 'Kriteria 2',
-        elemenId: elemenId, // Sertakan elemenId
-        unitId: unitId,     // Sertakan unitId
+        elemen_id: elemenId, // Sertakan elemenId
+        unit_id: unitId,     // Sertakan unitId
         createdAt: new Date(),
         updatedAt: new Date(),
       },

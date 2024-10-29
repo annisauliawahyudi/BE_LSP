@@ -1,4 +1,4 @@
-const { Elemen } = require('../models');
+const { Elemen, KUK } = require('../models');
 
 // Fungsi untuk mengirim respons
 const sendResponse = (res, status, message, data) => {
@@ -12,7 +12,15 @@ const sendResponse = (res, status, message, data) => {
 // Mengambil semua elemen
 exports.getAllElemen = async (req, res) => {
   try {
-    const elemen = await Elemen.findAll();
+    const elemen = await Elemen.findAll({
+       include: [
+          {
+            model: KUK,
+            as: 'kuks', // Pastikan ini sesuai dengan alias di model Elemen
+            attributes: ['id', 'namaKriteria'],
+          },
+        ],
+    });
     return sendResponse(res, 200, 'Data Retrieved Successfully', elemen);
   } catch (error) {
     console.error(error);

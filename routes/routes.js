@@ -29,6 +29,14 @@ const {
   updateKUK,
   deleteKUK,
 } = require("../controllers/kukController");
+const {
+  getAllKP,
+  createKP,
+  getOneKP,
+  updateKP,
+  deleteKP
+
+} = require("../controllers/KelPekerjaanController");
 
 // Authentication routes
 router.post("/register", register);
@@ -76,5 +84,11 @@ router.get("/kuks", authMiddleware, getAllKUKs); // Mengambil semua KUK
 router.post("/kuks", authMiddleware, restrictTo("admin"), createKUK); // Membuat KUK baru
 router.put("/kuks/:id", authMiddleware, restrictTo("admin"), updateKUK); // Memperbarui KUK
 router.delete("/kuks/:id", authMiddleware, restrictTo("admin"), deleteKUK); // Menghapus KUK
+
+// rute untuk kelpekerjaan
+router.get("/kelompok-pekerjaan", authMiddleware, getAllKP);
+router.post("/kelompok-pekerjaan", authMiddleware, restrictTo("admin"), createKP);
+router.put("/kelompok-pekerjaan/:id", authMiddleware, restrictTo("admin"), updateKP);
+router.delete("/kelompok-pekerjaan/:id", authMiddleware, restrictTo("admin"), deleteKP);
 
 module.exports = router;

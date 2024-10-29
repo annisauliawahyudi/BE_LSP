@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      elemenId: {
+      elemen_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -22,7 +22,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      unitId: {
+      unit_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {

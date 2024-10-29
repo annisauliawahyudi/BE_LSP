@@ -1,4 +1,4 @@
-const { Unit, JudulUnit, Elemen } = require('../models');
+const { Unit, JudulUnit, Elemen, KUK } = require('../models');
 
 // Mengambil semua unit
 exports.getUnits = async (req, res) => {
@@ -13,8 +13,16 @@ exports.getUnits = async (req, res) => {
         {
           model: Elemen, // Menggunakan relasi dengan Elemen
           as: 'elemen',
-          attributes: ['id', 'nama_elemen']
-        }
+          attributes: ['id', 'nama_elemen'],
+          include: [
+          {
+            model: KUK,
+            as: 'kuks', // Pastikan ini sesuai dengan alias di model Elemen
+            attributes: ['id', 'namaKriteria'],
+          },
+        ],
+        },
+
       ]
     });
 
