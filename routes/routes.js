@@ -34,14 +34,15 @@ const {
   createKP,
   getOneKP,
   updateKP,
-  deleteKP
-
+  deleteKP,
 } = require("../controllers/KelPekerjaanController");
+const asesiController = require('../controllers/asesiController');
+const multer = require('multer'); 
+const upload = multer({ dest: 'uploads/' }); 
 
 // Authentication routes
 router.post("/register", register);
 router.post("/login", login);
-router.get("/login", login);
 
 // Admin-only route
 router.get("/admin", authMiddleware, restrictTo("admin"), (req, res) => {
@@ -58,37 +59,47 @@ router.get("/asesi", authMiddleware, restrictTo("asesi"), (req, res) => {
   res.send("Welcome Asesi");
 });
 
-// Rute untuk Skema
-router.get("/skema", authMiddleware, getSkema); // Mengambil semua skema
-router.get("/skema/:id", authMiddleware, getIdSkema); // Mengambil skema berdasarkan ID
-router.post("/skema", authMiddleware, restrictTo("admin"), storeSkema); // Menyimpan skema baru
-router.put("/skema/:id", authMiddleware, restrictTo("admin"), updateSkema); // Memperbarui skema
-router.delete("/skema/:id", authMiddleware, restrictTo("admin"), deleteSkema); // Menghapus skema
+// x1x Skema
+router.get("/skema", authMiddleware, getSkema); 
+router.get("/skema/:id", authMiddleware, getIdSkema); 
+router.post("/skema", authMiddleware, restrictTo("admin"), storeSkema); 
+router.put("/skema/:id", authMiddleware, restrictTo("admin"), updateSkema); 
+router.delete("/skema/:id", authMiddleware, restrictTo("admin"), deleteSkema); 
 
-// Rute untuk Unit
-router.get("/unit", authMiddleware, getUnits); // Mengambil semua unit
-router.get("/unit/:id", authMiddleware, getUnitById); // Mengambil unit berdasarkan ID
-router.post("/unit", authMiddleware, restrictTo("admin"), storeUnit); // Menyimpan unit baru
-router.put("/unit/:id", authMiddleware, restrictTo("admin"), updateUnit); // Memperbarui unit
-router.delete("/unit/:id", authMiddleware, restrictTo("admin"), deleteUnit); // Menghapus unit
+//  Unit
+router.get("/unit", authMiddleware, getUnits); 
+router.get("/unit/:id", authMiddleware, getUnitById); 
+router.post("/unit", authMiddleware, restrictTo("admin"), storeUnit); 
+router.put("/unit/:id", authMiddleware, restrictTo("admin"), updateUnit); 
+router.delete("/unit/:id", authMiddleware, restrictTo("admin"), deleteUnit); 
 
-// Rute untuk Elemen
-router.get("/elemen", authMiddleware, getAllElemen); // Mengambil semua elemen
-router.get("/elemen/:id", authMiddleware, getElemenById); // Mengambil elemen berdasarkan ID
-router.post("/elemen", authMiddleware, restrictTo("admin"), storeElemen); // Menyimpan elemen baru
-router.put("/elemen/:id", authMiddleware, restrictTo("admin"), editElemen); // Memperbarui elemen
-router.delete("/elemen/:id", authMiddleware, restrictTo("admin"), deleteElemen); // Menghapus elemen
+// Elemen
+router.get("/elemen", authMiddleware, getAllElemen); 
+router.get("/elemen/:id", authMiddleware, getElemenById); 
+router.post("/elemen", authMiddleware, restrictTo("admin"), storeElemen);
+router.put("/elemen/:id", authMiddleware, restrictTo("admin"), editElemen); 
+router.delete("/elemen/:id", authMiddleware, restrictTo("admin"), deleteElemen); 
 
-// Rute untuk KUK
-router.get("/kuks", authMiddleware, getAllKUKs); // Mengambil semua KUK
-router.post("/kuks", authMiddleware, restrictTo("admin"), createKUK); // Membuat KUK baru
-router.put("/kuks/:id", authMiddleware, restrictTo("admin"), updateKUK); // Memperbarui KUK
-router.delete("/kuks/:id", authMiddleware, restrictTo("admin"), deleteKUK); // Menghapus KUK
+// KUK
+router.get("/kuks", authMiddleware, getAllKUKs); 
+router.post("/kuks", authMiddleware, restrictTo("admin"), createKUK); 
+router.put("/kuks/:id", authMiddleware, restrictTo("admin"), updateKUK); 
+router.delete("/kuks/:id", authMiddleware, restrictTo("admin"), deleteKUK); 
 
-// rute untuk kelpekerjaan
+// Kelompok Pekerjaan
 router.get("/kelompok-pekerjaan", authMiddleware, getAllKP);
 router.post("/kelompok-pekerjaan", authMiddleware, restrictTo("admin"), createKP);
 router.put("/kelompok-pekerjaan/:id", authMiddleware, restrictTo("admin"), updateKP);
 router.delete("/kelompok-pekerjaan/:id", authMiddleware, restrictTo("admin"), deleteKP);
+
+//  menu asesi 
+router.get('/menu/asesi', authMiddleware, restrictTo("admin"), asesiController.getAllAsesi);
+router.post('/menu/asesi', authMiddleware, restrictTo("admin"), asesiController.addAsesi); 
+router.patch('/menu/asesi/keterangan/:id', authMiddleware, restrictTo("admin"), asesiController.keteranganAsesi);
+router.patch('/menu/asesi/reset-password/:id', authMiddleware, restrictTo("admin"), asesiController.resetPassword);
+router.patch('/menu/asesi/deactivate/:id', authMiddleware, restrictTo("admin"), asesiController.deactivateAsesi);
+
+// import Excel
+router.post('/menu/asesi/import', authMiddleware, restrictTo("admin"), upload.single('file'), asesiController.importExcel);
 
 module.exports = router;
