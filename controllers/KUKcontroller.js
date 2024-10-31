@@ -20,11 +20,13 @@ exports.getAllKUKs = async (req, res) => {
 };
 
 // Membuat KUK baru
+// Membuat KUK baru
 exports.createKUK = async (req, res) => {
-    const { namaKriteria } = req.body; // Ambil hanya namaKriteria dari request body
+    const { namaKriteria, elemen_id, unit_id } = req.body; // Ambil semua data dari request body
 
     try {
-        const newKUK = await KUK.create({ namaKriteria }); // Hanya simpan namaKriteria
+        // Buat KUK baru dengan unit dan elemen yang diberikan
+        const newKUK = await KUK.create({ namaKriteria, elemen_id, unit_id });
         return res.status(201).json({
             status: 201,
             message: 'KUK created successfully',
@@ -39,6 +41,31 @@ exports.createKUK = async (req, res) => {
         });
     }
 };
+
+// exports.storeKUK = async (req, res) => {
+//   const { namaKriteria, elemen_id, unit_id } = req.body;
+
+//   // Validasi input
+//   if (!namaKriteria) {
+//     return sendResponse(res, 400, 'namaKriteria is required');
+//   }
+//   if (!unit_id) {
+//     return sendResponse(res, 400, 'unit_id is required');
+//   }
+//   if (!elemen_id) {
+//     return sendResponse(res, 400, 'elemen_id is required');
+//   }
+
+//   try {
+//     const newKUK = await KUK.create({ namaKriteria, elemen_id, unit_id });
+//     return sendResponse(res, 201, 'KUK Created Successfully', newKUK);
+//   } catch (error) {
+//     console.error(error);
+//     return sendResponse(res, 400, 'Bad Request', error.message || error);
+//   }
+// };
+
+
 
 // Memperbarui KUK
 exports.updateKUK = async (req, res) => {

@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
 class KUK extends Model {
   static associate(models) {
     this.belongsTo(models.Elemen, { foreignKey: 'elemen_id', as: 'elemen' });
+    this.belongsTo(models.Unit, { foreignKey: 'unit_id', as: 'unit' }); 
   }
 }
 

@@ -46,7 +46,7 @@ exports.getElemenById = async (req, res) => {
 
 // Menyimpan elemen baru
 exports.storeElemen = async (req, res) => {
-  const { nama_elemen } = req.body;
+  const { nama_elemen, unit_id } = req.body;
 
   // Validasi input
   if (!nama_elemen) {
@@ -54,7 +54,7 @@ exports.storeElemen = async (req, res) => {
   }
 
   try {
-    const newElemen = await Elemen.create({ nama_elemen });
+    const newElemen = await Elemen.create({ nama_elemen, unit_id });
     return sendResponse(res, 201, 'Elemen Created Successfully', newElemen);
   } catch (error) {
     console.error(error);

@@ -12,6 +12,7 @@ const {
 const {
   getUnits,
   getUnitById,
+  getUnitBySkemaId,
   storeUnit,
   updateUnit,
   deleteUnit,
@@ -25,10 +26,11 @@ const {
 } = require("../controllers/elemenController");
 const {
   getAllKUKs,
+  storeKUK,
   createKUK,
   updateKUK,
   deleteKUK,
-} = require("../controllers/kukController");
+} = require("../controllers/KUKcontroller");
 const {
   getAllKP,
   createKP,
@@ -68,7 +70,9 @@ router.delete("/skema/:id", authMiddleware, restrictTo("admin"), deleteSkema); /
 // Rute untuk Unit
 router.get("/unit", authMiddleware, getUnits); // Mengambil semua unit
 router.get("/unit/:id", authMiddleware, getUnitById); // Mengambil unit berdasarkan ID
-router.post("/unit", authMiddleware, restrictTo("admin"), storeUnit); // Menyimpan unit baru
+router.get("/skema/unit/:skema_id", authMiddleware, getUnitBySkemaId);
+// router.post("/unit", authMiddleware, restrictTo("admin"), storeUnit); // Menyimpan unit baru
+router.post("/unit/create/:skema_id", authMiddleware, restrictTo("admin"), storeUnit);
 router.put("/unit/:id", authMiddleware, restrictTo("admin"), updateUnit); // Memperbarui unit
 router.delete("/unit/:id", authMiddleware, restrictTo("admin"), deleteUnit); // Menghapus unit
 
@@ -81,6 +85,7 @@ router.delete("/elemen/:id", authMiddleware, restrictTo("admin"), deleteElemen);
 
 // Rute untuk KUK
 router.get("/kuks", authMiddleware, getAllKUKs); // Mengambil semua KUK
+// router.post("/kuks", authMiddleware, restrictTo("admin"), storeKUK); // Membuat KUK baru
 router.post("/kuks", authMiddleware, restrictTo("admin"), createKUK); // Membuat KUK baru
 router.put("/kuks/:id", authMiddleware, restrictTo("admin"), updateKUK); // Memperbarui KUK
 router.delete("/kuks/:id", authMiddleware, restrictTo("admin"), deleteKUK); // Menghapus KUK
