@@ -8,6 +8,8 @@ const {
   storeSkema,
   updateSkema,
   deleteSkema,
+  getJenisSkema,
+  getModeSkema
 } = require("../controllers/skemaController");
 const {
   getUnits,
@@ -67,6 +69,8 @@ router.get("/skema/:id", authMiddleware, getIdSkema); // Mengambil skema berdasa
 router.post("/skema", authMiddleware, restrictTo("admin"), storeSkema); // Menyimpan skema baru
 router.put("/skema/:id", authMiddleware, restrictTo("admin"), updateSkema); // Memperbarui skema
 router.delete("/skema/:id", authMiddleware, restrictTo("admin"), deleteSkema); // Menghapus skema
+router.get("/jenisSkema", authMiddleware, getJenisSkema);
+router.get("/modeSkema", authMiddleware, getModeSkema);
 
 // Rute untuk Unit
 router.get("/unit", authMiddleware, getUnits); // Mengambil semua unit

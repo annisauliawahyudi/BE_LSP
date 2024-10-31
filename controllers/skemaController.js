@@ -48,9 +48,6 @@ exports.getSkema = async (req, res) => {
   },
 ],
 
-
-
-
     });
 
     if (skemas.length === 0) {
@@ -227,6 +224,63 @@ exports.deleteSkema = async (req, res) => {
     return res.status(400).json({
       status: 400,
       message: "Failed to delete Skema",
+      error: error.message || error,
+    });
+  }
+};
+
+// mengambil jenis skema
+exports.getJenisSkema = async (req, res) => {
+  try {
+    const jenisSkema = await JenisSkema.findAll();
+
+    if (jenisSkema.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: "Not found / empty data",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      message: "Data Jenis Skema",
+      data: jenisSkema,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: 500,
+      message: "Internal Server Error",
+      error: error.message || error,
+    });
+  }
+};
+
+// mengambil mode skema
+
+exports.getModeSkema = async (req, res) => {
+  try {
+    const modeSkema = await ModeSkema.findAll();
+
+    if (modeSkema.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: "Not found / empty data",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      message: "Data Mode Skema",
+      data: modeSkema,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: 500,
+      message: "Internal Server Error",
       error: error.message || error,
     });
   }

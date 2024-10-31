@@ -1,4 +1,4 @@
-const { Elemen, KUK } = require('../models');
+const { Elemen, KUK, Unit, JudulUnit } = require('../models');
 
 // Fungsi untuk mengirim respons
 const sendResponse = (res, status, message, data) => {
@@ -36,8 +36,20 @@ exports.getElemenByUnitId = async (req, res) => {
     const elemen = await Elemen.findAll({
        where: { unit_id: unit_id },
        include: [
+         {
+            model: Unit,
+            as: 'unit', // Alias untuk Unit
+            attributes: ['id', 'judul_unit_id'], // Menyertakan judul_unit_id
+            include: [
+                {
+                    model: JudulUnit, // Model yang memiliki informasi judul_unit
+                    as: 'judul_unit', // Alias untuk model JudulUnit
+                    attributes: ['judul_unit'], // Menyertakan judul_unit
+                },
+            ],
+        },
           {
-            model: KUK,
+            model: KUK, 
             as: 'kuks', // Pastikan ini sesuai dengan alias di model Elemen
             attributes: ['id', 'namaKriteria'],
           },
