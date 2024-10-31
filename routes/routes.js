@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { authMiddleware, restrictTo } = require("../middleware/authMiddleware");
 const { register, login } = require("../controllers/authController");
+const multer = require('multer');
+const path = require('path');
 const {
   getSkema,
   getIdSkema,
@@ -31,6 +33,7 @@ const {
 const {
   getAllKUKs,
   storeKUK,
+  getKuksByElemenId,
   createKUK,
   updateKUK,
   deleteKUK,
@@ -43,6 +46,33 @@ const {
   deleteKP
 
 } = require("../controllers/KelPekerjaanController");
+
+// Konfigurasi multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // folder penyimpanan file
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 2 * 1024 * 1024 }, // batas ukuran file 2 MB
+  fileFilter: function (req, file, cb) {
+    const fileTypes = /pdf|doc|docx/;
+    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = fileTypes.test(file.mimetype);
+
+    if (extname && mimetype) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Hanya file dokumen yang diizinkan!'));
+    }
+  }
+});
 
 // Authentication routes
 router.post("/register", register);
@@ -67,7 +97,17 @@ router.get("/asesi", authMiddleware, restrictTo("asesi"), (req, res) => {
 // Rute untuk Skema
 router.get("/skema", authMiddleware, getSkema); // Mengambil semua skema
 router.get("/skema/:id", authMiddleware, getIdSkema); // Mengambil skema berdasarkan ID
-router.post("/skema", authMiddleware, restrictTo("admin"), storeSkema); // Menyimpan skema baru
+router.post(
+  "/skema",
+  authMiddleware,
+  restrictTo("admin"),
+  upload.fields([
+    { name: 'dokumen_skema', maxCount: 1 },
+    { name: 'dokumen_standar_kompetensi', maxCount: 1 }
+  ]),
+  storeSkema
+);
+ // Menyimpan skema baru
 router.put("/skema/:id", authMiddleware, restrictTo("admin"), updateSkema); // Memperbarui skema
 router.delete("/skema/:id", authMiddleware, restrictTo("admin"), deleteSkema); // Menghapus skema
 router.get("/jenisSkema", authMiddleware, getJenisSkema);
@@ -95,9 +135,15 @@ router.delete("/elemen/:id", authMiddleware, restrictTo("admin"), deleteElemen);
 // Rute untuk KUK
 router.get("/kuks", authMiddleware, getAllKUKs); // Mengambil semua KUK
 // router.post("/kuks", authMiddleware, restrictTo("admin"), storeKUK); // Membuat KUK baru
-router.post("/kuks", authMiddleware, restrictTo("admin"), createKUK); // Membuat KUK baru
+// router.post("/kuks", authMiddleware, restrictTo("admin"), createKUK); // Membuat KUK baru
 router.put("/kuks/:id", authMiddleware, restrictTo("admin"), updateKUK); // Memperbarui KUK
 router.delete("/kuks/:id", authMiddleware, restrictTo("admin"), deleteKUK); // Menghapus KUK
+// route get kuk by elemen id
+router.get("/elemen/kuks/:elemen_id", authMiddleware, getKuksByElemenId);
+// route create kuk by elemen id
+router.post("/kuks/create/:elemen_id", authMiddleware, restrictTo("admin"), createKUK);
+
+
 
 // rute untuk kelpekerjaan
 router.get("/kelompok-pekerjaan", authMiddleware, getAllKP);

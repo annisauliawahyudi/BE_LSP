@@ -128,12 +128,12 @@ exports.storeSkema = async (req, res) => {
       bidang,
       standar_kompetensi,
       jenis_skema_id,
-      mode_skema_id,
-      dokumen_skema,
-      dokumen_standar_kompetensi
+      mode_skema_id
     } = req.body;
 
-    // Validasi input dapat ditambahkan di sini
+    // Mengambil path dari file yang diunggah
+    const dokumenSkemaPath = req.files['dokumen_skema'] ? req.files['dokumen_skema'][0].path : null;
+    const dokumenStandarKompetensiPath = req.files['dokumen_standar_kompetensi'] ? req.files['dokumen_standar_kompetensi'][0].path : null;
 
     const addSkema = await Skema.create({
       kode_skema,
@@ -142,8 +142,8 @@ exports.storeSkema = async (req, res) => {
       standar_kompetensi,
       jenis_skema_id,
       mode_skema_id,
-      dokumen_skema,
-      dokumen_standar_kompetensi
+      dokumen_skema: dokumenSkemaPath,
+      dokumen_standar_kompetensi: dokumenStandarKompetensiPath
     });
 
     return res.status(201).json({
@@ -156,10 +156,11 @@ exports.storeSkema = async (req, res) => {
     return res.status(400).json({
       status: 400,
       message: "Failed to create Skema",
-      error: error.message || error, // Tampilkan pesan kesalahan yang lebih spesifik
+      error: error.message || error,
     });
   }
 };
+
 
 // Memperbarui skema
 exports.updateSkema = async (req, res) => {

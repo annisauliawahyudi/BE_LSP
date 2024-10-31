@@ -41,12 +41,66 @@ exports.getAllKUKs = async (req, res) => {
 
 // Membuat KUK baru
 // Membuat KUK baru
-exports.createKUK = async (req, res) => {
-  const { namaKriteria, elemen_id } = req.body; // Ambil semua data dari request body
+exports.getKuksByElemenId = async (req, res) => {
+    try {
+      const elemen_id = req.params.elemen_id; 
+      const kuks = await KUK.findAll({
+        where: { elemen_id: elemen_id },
+        include: [
+          {
+            model: Elemen,
+            as: "elemen",
+            attributes: ["id", "nama_elemen"],
+          },
+          {
+            model: Unit,
+            as: "unit",
+            attributes: ["id", "judul_unit_id"], // Menyertakan judul_unit_id
+            include: [
+              {
+                model: JudulUnit, // Model yang memiliki informasi judul_unit
+                as: "judul_unit", // Alias untuk model JudulUnit
+                attributes: ["judul_unit"], // Menyertakan judul_unit
+              },
+            ],
+          },
+        ],
+      });
 
+      if (kuks.length === 0) {
+        return res.status(404).json({
+          status: 404,
+          message: "No kuks found for this elemen",
+          data: null,
+        });
+      }
+
+      return res.status(200).json({
+        status: 200,
+        message: "KUKs retrieved successfully",
+        data: kuks,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        status: 500,
+        message: "Error fetching KUKs",
+        error: error.message || error,
+      });
+    }
+  };
+
+// Membuat KUK baru
+exports.createKUK = async (req, res) => {
+  
   try {
+    const { elemen_id } = req.params;
+    const { namaKriteria } = req.body; // Ambil semua data dari request body
     // Buat KUK baru dengan unit dan elemen yang diberikan
-    const newKUK = await KUK.create({ namaKriteria, elemen_id });
+    const newKUK = await KUK.create({ 
+        namaKriteria, 
+        elemen_id
+    });
     return res.status(201).json({
       status: 201,
       message: "KUK created successfully",
