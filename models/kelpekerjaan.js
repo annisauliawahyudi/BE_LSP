@@ -30,16 +30,16 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW, // Menambahkan default value untuk createdAt
-    },
+    // createdAt: {
+    //   type: DataTypes.DATE,
+    //   defaultValue: DataTypes.NOW, // Menambahkan default value untuk createdAt
+    // },
   },
   {
     sequelize,
     modelName: "KelPekerjaan",
     tableName: "KelPekerjaans",
-    timestamps: false,
+    timestamps: true,
   }
 );
 

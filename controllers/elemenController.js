@@ -28,6 +28,56 @@ exports.getAllElemen = async (req, res) => {
   }
 };
 
+//  mengambil elemen berdasarkan unit
+exports.getElemenByUnitId = async (req, res) => {
+  try {
+    const unit_id = req.params.unit_id;
+
+    const elemen = await Elemen.findAll({
+       where: { unit_id: unit_id },
+       include: [
+          {
+            model: KUK,
+            as: 'kuks', // Pastikan ini sesuai dengan alias di model Elemen
+            attributes: ['id', 'namaKriteria'],
+          },
+        ],
+    });
+
+    if (elemen.length === 0) {
+      return sendResponse(res, 404, 'No elemens found for this unit', null);
+    }
+
+    return sendResponse(res, 200, 'Data Retrieved Successfully', elemen);
+  } catch (error) {
+    console.error(error);
+    return sendResponse(res, 500, 'Internal Server Error', error.message || error);
+  }
+};
+
+
+// Menyimpan elemen baru
+exports.storeElemen = async (req, res) => {
+  const { unit_id } = req.params; 
+  const { nama_elemen } = req.body;
+
+  // Validasi input
+  if (!nama_elemen) {
+    return sendResponse(res, 400, 'Nama elemen is required');
+  }
+
+  try {
+    const newElemen = await Elemen.create({ 
+      nama_elemen, 
+      unit_id 
+    });
+    return sendResponse(res, 201, 'Elemen Created Successfully', newElemen);
+  } catch (error) {
+    console.error(error);
+    return sendResponse(res, 400, 'Bad Request', error.message || error);
+  }
+};
+
 // Mengambil elemen berdasarkan ID
 exports.getElemenById = async (req, res) => {
   const { id } = req.params;
@@ -45,22 +95,22 @@ exports.getElemenById = async (req, res) => {
 };
 
 // Menyimpan elemen baru
-exports.storeElemen = async (req, res) => {
-  const { nama_elemen, unit_id } = req.body;
+// exports.storeElemen = async (req, res) => {
+//   const { nama_elemen, unit_id } = req.body;
 
-  // Validasi input
-  if (!nama_elemen) {
-    return sendResponse(res, 400, 'Nama elemen is required');
-  }
+//   // Validasi input
+//   if (!nama_elemen) {
+//     return sendResponse(res, 400, 'Nama elemen is required');
+//   }
 
-  try {
-    const newElemen = await Elemen.create({ nama_elemen, unit_id });
-    return sendResponse(res, 201, 'Elemen Created Successfully', newElemen);
-  } catch (error) {
-    console.error(error);
-    return sendResponse(res, 400, 'Bad Request', error.message || error);
-  }
-};
+//   try {
+//     const newElemen = await Elemen.create({ nama_elemen, unit_id });
+//     return sendResponse(res, 201, 'Elemen Created Successfully', newElemen);
+//   } catch (error) {
+//     console.error(error);
+//     return sendResponse(res, 400, 'Bad Request', error.message || error);
+//   }
+// };
 
 // Memperbarui elemen
 exports.editElemen = async (req, res) => {

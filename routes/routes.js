@@ -20,6 +20,7 @@ const {
 const {
   getAllElemen,
   getElemenById,
+  getElemenByUnitId,
   storeElemen,
   editElemen,
   deleteElemen,
@@ -78,8 +79,10 @@ router.delete("/unit/:id", authMiddleware, restrictTo("admin"), deleteUnit); // 
 
 // Rute untuk Elemen
 router.get("/elemen", authMiddleware, getAllElemen); // Mengambil semua elemen
+router.get("/unit/elemen/:unit_id", authMiddleware, getElemenByUnitId); // mengambil elemen per unit
 router.get("/elemen/:id", authMiddleware, getElemenById); // Mengambil elemen berdasarkan ID
-router.post("/elemen", authMiddleware, restrictTo("admin"), storeElemen); // Menyimpan elemen baru
+// router.post("/elemen", authMiddleware, restrictTo("admin"), storeElemen); // Menyimpan elemen baru
+router.post("/elemen/create/:unit_id", authMiddleware, restrictTo("admin"), storeElemen); 
 router.put("/elemen/:id", authMiddleware, restrictTo("admin"), editElemen); // Memperbarui elemen
 router.delete("/elemen/:id", authMiddleware, restrictTo("admin"), deleteElemen); // Menghapus elemen
 

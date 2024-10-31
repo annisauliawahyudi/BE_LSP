@@ -103,7 +103,10 @@ exports.deleteKUK = async (req, res) => {
     try {
         const deleted = await KUK.destroy({ where: { id } });
         if (deleted) {
-            return res.status(204).send();
+            return res.status(200).json({
+                status: 200,
+                message: "KUK deleted successfully"
+            });
         }
         return res.status(404).json({ 
             status: 404, 

@@ -83,7 +83,7 @@ module.exports = {
           .json({ error: "Kelompok pekerjaan tidak ditemukan" });
       }
       return res
-        .status(204)
+        .status(200)
         .json({ message: "Kelompok pekerjaan berhasil dihapus" });
     } catch (error) {
       return res.status(500).json({ error: error.message });
