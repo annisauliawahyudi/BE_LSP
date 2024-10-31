@@ -299,3 +299,31 @@ exports.deleteUnit = async (req, res) => {
     });
   }
 };
+
+// mengambil judul unit
+exports.getJudulUnit = async (req, res) => {
+  try {
+    const judulUnit = await JudulUnit.findAll();
+
+    if (judulUnit.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: "Not found / empty data",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      message: "Data Judul Unit",
+      data: judulUnit,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: 500,
+      message: "Internal Server Error",
+      error: error.message || error,
+    });
+  }
+};

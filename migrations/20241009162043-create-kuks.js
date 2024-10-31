@@ -24,7 +24,7 @@ module.exports = {
       },
       unit_id: {
         type: Sequelize.UUID,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'units', // Make sure this matches the name of your `unit` table
           key: 'id',

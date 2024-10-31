@@ -15,6 +15,7 @@ const {
   getUnits,
   getUnitById,
   getUnitBySkemaId,
+  getJudulUnit,
   storeUnit,
   updateUnit,
   deleteUnit,
@@ -80,6 +81,7 @@ router.get("/skema/unit/:skema_id", authMiddleware, getUnitBySkemaId);
 router.post("/unit/create/:skema_id", authMiddleware, restrictTo("admin"), storeUnit);
 router.put("/unit/:id", authMiddleware, restrictTo("admin"), updateUnit); // Memperbarui unit
 router.delete("/unit/:id", authMiddleware, restrictTo("admin"), deleteUnit); // Menghapus unit
+router.get("/judulUnit", authMiddleware, getJudulUnit);
 
 // Rute untuk Elemen
 router.get("/elemen", authMiddleware, getAllElemen); // Mengambil semua elemen

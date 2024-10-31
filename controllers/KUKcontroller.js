@@ -42,11 +42,11 @@ exports.getAllKUKs = async (req, res) => {
 // Membuat KUK baru
 // Membuat KUK baru
 exports.createKUK = async (req, res) => {
-  const { namaKriteria, elemen_id, unit_id } = req.body; // Ambil semua data dari request body
+  const { namaKriteria, elemen_id } = req.body; // Ambil semua data dari request body
 
   try {
     // Buat KUK baru dengan unit dan elemen yang diberikan
-    const newKUK = await KUK.create({ namaKriteria, elemen_id, unit_id });
+    const newKUK = await KUK.create({ namaKriteria, elemen_id });
     return res.status(201).json({
       status: 201,
       message: "KUK created successfully",
