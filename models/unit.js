@@ -1,20 +1,26 @@
-'use strict';
-const { Model } = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Unit extends Model {
     static associate(models) {
       // Relasi ke tabel JudulUnit
-      this.belongsTo(models.JudulUnit, { foreignKey: 'judul_unit_id', as: 'judul_unit' });
-      
+      this.belongsTo(models.JudulUnit, { foreignKey: "judul_unit_id", as: "judul_unit" });
+
       // Relasi ke tabel Skema
-      this.belongsTo(models.Skema, { foreignKey: 'skema_id', as: 'skema' });
-      
+      this.belongsTo(models.Skema, { foreignKey: "skema_id", as: "skema" });
+
       // Relasi ke tabel Elemen
-      this.hasMany(models.Elemen, { foreignKey: 'unit_id', as: 'elemen' });
+      this.hasMany(models.Elemen, { foreignKey: "unit_id", as: "elemen" });
 
       // Relasi ke tabel KelPekerjaan
-      this.hasMany(models.KelPekerjaan, { foreignKey: 'unit_id', as: 'kelompok_pekerjaan' });
+      this.hasMany(models.KelPekerjaan, { foreignKey: "unit_id", as: "kelompok_pekerjaan" });
+
+      // Unit.belongsTo(JudulUnit, {
+      //   foreignKey: "judul_unit_id",
+      //   as: "judul_unit", // Pastikan alias ini cocok
+      // });
+      // this.belongsTo(models.JudulUnit, { foreignKey: "judul_unit_id", as: "judul_unit" });
     }
   }
 
@@ -31,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         validate: {
           notNull: {
-            msg: 'Kode unit tidak boleh kosong',
+            msg: "Kode unit tidak boleh kosong",
           },
         },
       },
@@ -39,21 +45,21 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: 'judul_units',
-          key: 'id',
+          model: "judul_units",
+          key: "id",
         },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       skema_id: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: 'skemas',
-          key: 'id',
+          model: "skemas",
+          key: "id",
         },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       // kelompokPekerjaanId: {
       //   type: DataTypes.INTEGER,
@@ -67,10 +73,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Unit',
-      tableName: 'units',
+      modelName: "Unit",
+      tableName: "units",
     }
   );
-  
+
   return Unit;
 };

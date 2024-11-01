@@ -48,9 +48,6 @@ exports.getSkema = async (req, res) => {
   },
 ],
 
-
-
-
     });
 
     if (skemas.length === 0) {
@@ -131,12 +128,12 @@ exports.storeSkema = async (req, res) => {
       bidang,
       standar_kompetensi,
       jenis_skema_id,
-      mode_skema_id,
-      dokumen_skema,
-      dokumen_standar_kompetensi
+      mode_skema_id
     } = req.body;
 
-    // Validasi input dapat ditambahkan di sini
+    // Mengambil path dari file yang diunggah
+    const dokumenSkemaPath = req.files['dokumen_skema'] ? req.files['dokumen_skema'][0].path : null;
+    const dokumenStandarKompetensiPath = req.files['dokumen_standar_kompetensi'] ? req.files['dokumen_standar_kompetensi'][0].path : null;
 
     const addSkema = await Skema.create({
       kode_skema,
@@ -145,8 +142,8 @@ exports.storeSkema = async (req, res) => {
       standar_kompetensi,
       jenis_skema_id,
       mode_skema_id,
-      dokumen_skema,
-      dokumen_standar_kompetensi
+      dokumen_skema: dokumenSkemaPath,
+      dokumen_standar_kompetensi: dokumenStandarKompetensiPath
     });
 
     return res.status(201).json({
@@ -159,10 +156,11 @@ exports.storeSkema = async (req, res) => {
     return res.status(400).json({
       status: 400,
       message: "Failed to create Skema",
-      error: error.message || error, // Tampilkan pesan kesalahan yang lebih spesifik
+      error: error.message || error,
     });
   }
 };
+
 
 // Memperbarui skema
 exports.updateSkema = async (req, res) => {
@@ -227,6 +225,63 @@ exports.deleteSkema = async (req, res) => {
     return res.status(400).json({
       status: 400,
       message: "Failed to delete Skema",
+      error: error.message || error,
+    });
+  }
+};
+
+// mengambil jenis skema
+exports.getJenisSkema = async (req, res) => {
+  try {
+    const jenisSkema = await JenisSkema.findAll();
+
+    if (jenisSkema.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: "Not found / empty data",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      message: "Data Jenis Skema",
+      data: jenisSkema,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: 500,
+      message: "Internal Server Error",
+      error: error.message || error,
+    });
+  }
+};
+
+// mengambil mode skema
+
+exports.getModeSkema = async (req, res) => {
+  try {
+    const modeSkema = await ModeSkema.findAll();
+
+    if (modeSkema.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: "Not found / empty data",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      message: "Data Mode Skema",
+      data: modeSkema,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: 500,
+      message: "Internal Server Error",
       error: error.message || error,
     });
   }

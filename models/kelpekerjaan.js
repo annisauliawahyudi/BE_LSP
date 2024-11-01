@@ -12,32 +12,37 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   KelPekerjaan.init(
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        allowNull: false,
-      },
-      kelompok_pekerjaan: DataTypes.STRING,
-      skema_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: 'skemas',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      },
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
     },
-    {
-      sequelize,
-      modelName: "KelPekerjaan",
-      tableName: "KelPekerjaans", // Optional: Custom table name if needed
-      timestamps: false, // Optional: Disable timestamps if not needed
-    }
-  );
+    kelompok_pekerjaan: DataTypes.STRING,
+    skema_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'skemas',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+    // createdAt: {
+    //   type: DataTypes.DATE,
+    //   defaultValue: DataTypes.NOW, // Menambahkan default value untuk createdAt
+    // },
+  },
+  {
+    sequelize,
+    modelName: "KelPekerjaan",
+    tableName: "KelPekerjaans",
+    timestamps: true,
+  }
+);
+
 
   return KelPekerjaan;
 };
