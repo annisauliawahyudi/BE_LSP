@@ -43,9 +43,11 @@ const {
   createKP,
   getOneKP,
   updateKP,
-  deleteKP
-
+  deleteKP,
 } = require("../controllers/KelPekerjaanController");
+const asesiController = require('../controllers/asesiController');
+const multer = require('multer'); 
+const upload = multer({ dest: 'uploads/' }); 
 
 // Konfigurasi multer
 const storage = multer.diskStorage({
@@ -77,7 +79,6 @@ const upload = multer({
 // Authentication routes
 router.post("/register", register);
 router.post("/login", login);
-router.get("/login", login);
 
 // Admin-only route
 router.get("/admin", authMiddleware, restrictTo("admin"), (req, res) => {
@@ -144,11 +145,20 @@ router.get("/elemen/kuks/:elemen_id", authMiddleware, getKuksByElemenId);
 router.post("/kuks/create/:elemen_id", authMiddleware, restrictTo("admin"), createKUK);
 
 
-
-// rute untuk kelpekerjaan
+// Kelompok Pekerjaan
 router.get("/kelompok-pekerjaan", authMiddleware, getAllKP);
 router.post("/kelompok-pekerjaan", authMiddleware, restrictTo("admin"), createKP);
 router.put("/kelompok-pekerjaan/:id", authMiddleware, restrictTo("admin"), updateKP);
 router.delete("/kelompok-pekerjaan/:id", authMiddleware, restrictTo("admin"), deleteKP);
+
+//  menu asesi 
+router.get('/menu/asesi', authMiddleware, restrictTo("admin"), asesiController.getAllAsesi);
+router.post('/menu/asesi', authMiddleware, restrictTo("admin"), asesiController.addAsesi); 
+router.patch('/menu/asesi/keterangan/:id', authMiddleware, restrictTo("admin"), asesiController.keteranganAsesi);
+router.patch('/menu/asesi/reset-password/:id', authMiddleware, restrictTo("admin"), asesiController.resetPassword);
+router.patch('/menu/asesi/deactivate/:id', authMiddleware, restrictTo("admin"), asesiController.deactivateAsesi);
+
+// import Excel
+router.post('/menu/asesi/import', authMiddleware, restrictTo("admin"), upload.single('file'), asesiController.importExcel);
 
 module.exports = router;
